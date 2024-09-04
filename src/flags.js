@@ -704,11 +704,9 @@ Flags.getTargetCid = async function (type, id) {
 	return null;
 };
 
-// Helper Functions
+// Helper Functions (moved the functions out of the method)
 async function notifyAssignee(assigneeId, flagId, uid) {
-	if (assigneeId === '' || parseInt(uid, 10) === parseInt(assigneeId, 10)) {
-		return;
-	}
+	if (assigneeId === '' || parseInt(uid, 10) === parseInt(assigneeId, 10)) { return; }
 
 	const notifObj = await notifications.create({
 		type: 'my-flags',
@@ -726,8 +724,7 @@ async function isAssignable(assigneeId, currentType, targetId) {
 	let allowed = await user.isAdminOrGlobalMod(assigneeId);
 
 	if (!allowed && currentType === 'post') {
-		const cid = await posts.getCidByPid(targetId);
-		allowed = await user.isModerator(assigneeId, cid);
+		const cid = await posts.getCidByPid(targetId); allowed = await user.isModerator(assigneeId, cid);
 	}
 
 	return allowed;
@@ -786,8 +783,6 @@ Flags.update = async function (flagId, uid, changeset) {
 
 	plugins.hooks.fire('action:flags.update', { flagId: flagId, changeset: changeset, uid: uid });
 };
-
-
 
 Flags.resolveFlag = async function (type, id, uid) {
 	const flagId = await Flags.getFlagIdByTarget(type, id);
