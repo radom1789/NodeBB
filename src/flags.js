@@ -746,6 +746,7 @@ Flags.update = async function (flagId, uid, changeset) {
 	async function propState(changeset, prop, current, tasks, now, flagId, meta) {
 		tasks.push(db.sortedSetAdd(`flags:byState:${changeset[prop]}`, now, flagId));
 		tasks.push(db.sortedSetRemove(`flags:byState:${current[prop]}`, flagId));
+		console.log('Tracy');
 		if (changeset[prop] === 'resolved' && meta.config['flags:actionOnResolve'] === 'rescind') {
 			tasks.push(rescindNotifications(`flag:${current.type}:${current.targetId}`));
 		}
@@ -756,6 +757,7 @@ Flags.update = async function (flagId, uid, changeset) {
 
 	// Function for if prop === assignee and checking the set
 	async function propAssignee(prop, changeset, tasks, now, flagId) {
+		console.log('Tracy');
 		if (changeset[prop] === '') {
 			tasks.push(db.sortedSetRemove(`flags:byAssignee:${changeset[prop]}`, flagId));
 		/* eslint-disable-next-line */
@@ -770,6 +772,7 @@ Flags.update = async function (flagId, uid, changeset) {
 	// Retrieve existing flag data to compare for history-saving/reference purposes
 	const tasks = [];
 	for (const prop of Object.keys(changeset)) {
+		console.log('Tracy');
 		if (current[prop] === changeset[prop]) {
 			delete changeset[prop];
 		} else if (prop === 'state') {
@@ -779,7 +782,7 @@ Flags.update = async function (flagId, uid, changeset) {
 				propState(changeset, prop, current, tasks, now, flagId, meta); // change here
 			}
 		} else if (prop === 'assignee') {
-			propAssignee(prop, changeset, current, tasks, now, flagId, meta); // change here
+			propAssignee(prop, changeset, current, tasks, now, flagId); // change here
 		}
 	}
 
