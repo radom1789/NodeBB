@@ -724,7 +724,8 @@ async function isAssignable(assigneeId, currentType, targetId) {
 	let allowed = await user.isAdminOrGlobalMod(assigneeId);
 
 	if (!allowed && currentType === 'post') {
-		const cid = await posts.getCidByPid(targetId); allowed = await user.isModerator(assigneeId, cid);
+		const cid = await posts.getCidByPid(targetId);
+		allowed = await user.isModerator(assigneeId, cid);
 	}
 
 	return allowed;

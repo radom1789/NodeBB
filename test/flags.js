@@ -577,6 +577,18 @@ describe('Flags', () => {
 			assert.strictEqual('wip', state);
 		});
 
+		it('should not allow reassignment if user is not authorized', async () => {
+			await Flags.update(1, uid3, { assignee: uid1 });
+			const assignee = await db.getObjectField('flag:1', 'assignee');
+			assert.notStrictEqual(uid1, parseInt(assignee, 10));
+		});
+
+		it('should remove flag from byAssignee sorted set when assignee is empty', async () => {
+			await Flags.update(1, adminUid, { assignee: '' });
+			const isMember = await db.isSortedSetMember('flags:byAssignee:', 1);
+			assert.strictEqual(isMember, false);
+		});
+
 		describe('resolve/reject', () => {
 			let result;
 			let flagObj;
@@ -646,6 +658,21 @@ describe('Flags', () => {
 
 				delete Meta.config['flags:actionOnReject'];
 			});
+		});
+	});
+
+	describe('.isAssignable()', () => {
+		it('should allow assignment if user is an admin and do nothing otherwise', async () => {
+			await Flags.update(1, adminUid, {
+				assignee: adminUid,
+			});
+			let assignee = await db.getObjectField('flag:1', 'assignee');
+			assert.strictEqual(adminUid, parseInt(assignee, 10));
+			await Flags.update(1, adminUid, {
+				assignee: uid3,
+			});
+			assignee = await db.getObjectField('flag:1', 'assignee');
+			assert.strictEqual(adminUid, parseInt(assignee, 10));
 		});
 	});
 
