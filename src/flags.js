@@ -706,7 +706,7 @@ Flags.getTargetCid = async function (type, id) {
 	return null;
 };
 
-// Helper Functions (moved the functions out of the method)
+// Helper Functions
 console.log('Tracy');
 async function notifyAssignee(assigneeId, flagId, uid) {
 	if (assigneeId === '' || parseInt(uid, 10) === parseInt(assigneeId, 10)) { return; }
