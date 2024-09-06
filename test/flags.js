@@ -577,7 +577,6 @@ describe('Flags', () => {
 			assert.strictEqual('wip', state);
 		});
 
-		// Changes start here (second one taken from ChatGPT with prompt "write a test for when assignee is empty")
 		it('should not allow reassignment if user is not authorized', async () => {
 			await Flags.update(1, uid3, { assignee: uid1 });
 			const assignee = await db.getObjectField('flag:1', 'assignee');
@@ -589,7 +588,6 @@ describe('Flags', () => {
 			const isMember = await db.isSortedSetMember('flags:byAssignee:', 1);
 			assert.strictEqual(isMember, false);
 		});
-		// Changes end here
 
 		describe('resolve/reject', () => {
 			let result;
