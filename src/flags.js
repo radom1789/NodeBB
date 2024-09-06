@@ -1,5 +1,7 @@
 'use strict';
 
+console.log('Tracy');
+
 const _ = require('lodash');
 const winston = require('winston');
 const validator = require('validator');
@@ -705,6 +707,7 @@ Flags.getTargetCid = async function (type, id) {
 };
 
 // Helper Functions (moved the functions out of the method)
+console.log('Tracy');
 async function notifyAssignee(assigneeId, flagId, uid) {
 	if (assigneeId === '' || parseInt(uid, 10) === parseInt(assigneeId, 10)) { return; }
 
@@ -774,6 +777,8 @@ Flags.update = async function (flagId, uid, changeset) {
 		}
 	}
 
+	console.log('Tracy');
+
 	if (!Object.keys(changeset).length) {
 		return;
 	}
@@ -783,6 +788,7 @@ Flags.update = async function (flagId, uid, changeset) {
 	await Promise.all(tasks);
 
 	plugins.hooks.fire('action:flags.update', { flagId: flagId, changeset: changeset, uid: uid });
+	console.log('Tracy');
 };
 
 Flags.resolveFlag = async function (type, id, uid) {
